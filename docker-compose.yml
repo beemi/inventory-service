@@ -1,0 +1,19 @@
+version: '2.1'
+
+services:
+  mysql:
+    container_name: "inventory-service-mysql"
+    image: mysql:latest
+    hostname: "inventory-service-mysql"
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_DATABASE=inventory_db
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+      - MYSQL_USER=test
+      - MYSQL_PASSWORD=password
+    volumes:
+      - "data:/var/lib/mysql"
+volumes:
+  data:
