@@ -1,8 +1,12 @@
 CREATE TABLE IF NOT EXISTS inventory_review (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    inventory_id INT NOT NULL,
-    rating INT NOT NULL,
-    review TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (inventory_id) REFERENCES inventory(id)
-);
+                                                ID INT AUTO_INCREMENT PRIMARY KEY,
+                                                REVIEW TEXT NOT NULL,
+                                                RATING INT NOT NULL,
+                                                REVIEWER VARCHAR(255) NOT NULL,
+    CREATED_AT TIMESTAMP,
+    LAST_MODIFIED_TIME TIMESTAMP,
+    INVENTORY_ID INT NOT NULL,
+    CONSTRAINT fk_inventory
+    FOREIGN KEY (INVENTORY_ID)
+    REFERENCES inventory(ID)
+    );

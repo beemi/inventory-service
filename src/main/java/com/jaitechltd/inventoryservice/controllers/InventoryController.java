@@ -1,14 +1,17 @@
 package com.jaitechltd.inventoryservice.controllers;
 
-import com.jaitechltd.inventoryservice.entities.Inventory;
-import com.jaitechltd.inventoryservice.services.InventoryService;
+import com.jaitechltd.inventoryservice.entities.InventoryEntity;
+import com.jaitechltd.inventoryservice.models.dto.requests.InventoryRequestDTO;
+import com.jaitechltd.inventoryservice.models.dto.responses.InventoryResponseDTO;
+import com.jaitechltd.inventoryservice.service.InventoryService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/inventory")
+@RequestMapping(value={"/api/v1/inventory"},produces = MediaType.APPLICATION_JSON_VALUE)
 public class InventoryController {
 
     private final InventoryService inventoryService;
@@ -20,19 +23,14 @@ public class InventoryController {
     /**
      * Create inventory
      *
-     * @param inventoryRequest Inventory request - see {@link Inventory}
+     * @param inventoryRequest Inventory request - see {@link InventoryEntity}
      * @return if successful, return the created inventory with HTTP status 200, otherwise return HTTP status 500
      */
     @PostMapping("/create")
-    public ResponseEntity<?> createInventory(@RequestBody Inventory inventoryRequest) {
-        log.info("Create inventory controller ...");
+    public ResponseEntity<InventoryResponseDTO> createInventory(@RequestBody InventoryRequestDTO inventoryRequest) {
+        log.info("Call to create inventory with request - {}", inventoryRequest);
 
-        Inventory inventory = inventoryService.createInventory(inventoryRequest);
+        InventoryResponseDTO inventory = inventoryService.createInventory(inventoryRequest);
         return ResponseEntity.ok(inventory);
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getInventory(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(inventoryService.getInventory(id));
     }
 }
