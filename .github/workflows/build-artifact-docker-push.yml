@@ -83,53 +83,39 @@ jobs:
           secrets: |
             GIT_AUTH_TOKEN=${{ secrets.GITHUB_TOKEN }}
 
-#      - name: Build and push Docker image to ECR 🐳 🐳 🐳
-#        env:
-#          CUSTOM_VERSION: ${{ github.run_number }}.${{ github.run_id }}.${{ steps.short_sha.outputs.SHORT_SHA }}
-#          GIT_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        id: docker_build
-#        run: |
-#          docker login ${{ env.REGISTRY }} -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
-#          docker build --tag ${{ env.REGISTRY }}/${{ steps.repo.outputs.name }}:${{ env.CUSTOM_VERSION }} .
-#          docker push ${{ env.REGISTRY }}/${{ steps.repo.outputs.name }}:${{ env.CUSTOM_VERSION }}
-#        shell: bash
+      - name: Set Git User Identity 🧑‍🎤🧑‍🎤🧑‍🎤
+        if: github.event_name != 'pull_request'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
 
-#      - name: Set Git User Identity 🧑‍🎤🧑‍🎤🧑‍🎤
-#        if: github.event_name != 'pull_request'
-#        run: |
-#          git config --local user.email "action@github.com"
-#          git config --local user.name "GitHub Action"
-#
-#      - name: Create Git Tag 📝📝📝 & release those changes to same branch
-#        if: github.event_name != 'pull_request'
-#        id: create_tag
-#        run: |
-#          echo "::group::Create Git Tag"
-#          tag_name="v${{ env.CUSTOM_VERSION }}"
-#          echo "TAG_NAME=$tag_name" >> $GITHUB_ENV
-#          git tag -a "$tag_name" -m "Auto generated tag from GitHub Actions 🤖🤖🤖"
-#          git push origin "$tag_name"
-#          echo "::endgroup::"
-#
-#      - name: Create a Release in a GitHub Action ✅✅✅
-#        if: github.event_name != 'pull_request'
-#        id: create_release
-#        uses: comnoco/create-release-action@v2.0.5
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        with:
-#          tag_name: v${{ env.CUSTOM_VERSION }}
-#          release_name: release-${{ env.CUSTOM_VERSION }}
-#          draft: false
-#          prerelease: false
-#          body: |
-#            # Release notes 💥💥💥
-#            ### Version:
-#            - Automated - Tagging version *${{ env.CUSTOM_VERSION }}* *from ${{ github.ref }}* 🎉🎉🎉
-#            - Tag - Tag name: ${{ env.TAG_NAME }}
-#            - Latest tag - ${{ env.LATEST_TAG }}
-#            - Branch - ${{ github.ref }}
-#            ### Commits:
-#            ${{ env.FORMATTED_COMMIT_LIST }}
+      - name: Create Git Tag 📝📝📝 & release those changes to same branch
+        if: github.event_name != 'pull_request'
+        id: create_tag
+        run: |
+          echo "::group::Create Git Tag"
+          tag_name="v${{ steps.meta.outputs.tags }}"
+          echo "TAG_NAME=$tag_name" >> $GITHUB_ENV
+          git tag -a "$tag_name" -m "Auto generated tag from GitHub Actions 🤖🤖🤖"
+          git push origin "$tag_name"
+          echo "::endgroup::"
+
+      - name: Create a Release in a GitHub Action ✅✅✅
+        if: github.event_name != 'pull_request'
+        id: create_release
+        uses: comnoco/create-release-action@v2.0.5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ steps.meta.outputs.tags }}
+          release_name: release-${{ steps.meta.outputs.tags }}
+          draft: false
+          prerelease: false
+          body: |
+            # Release notes 💥💥💥
+            ### Version:
+            - Automated - Tagging version *${{ steps.meta.outputs.tags }}* *from ${{ github.ref }}* 🎉🎉🎉
+            - Tag - Tag name: *${{ steps.meta.outputs.tags }}*
+            - Branch - ${{ github.ref }}
 
 
