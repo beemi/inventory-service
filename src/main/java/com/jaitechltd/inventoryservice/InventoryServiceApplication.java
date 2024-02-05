@@ -10,12 +10,12 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 @SpringBootApplication
 public class InventoryServiceApplication {
 
-	public static void main(String[] args) {
-		try {
-			SpringApplication.run(InventoryServiceApplication.class, args);
-			log.info("InventoryServiceApplication started ...");
-		} catch (Exception e) {
-			log.error("InventoryServiceApplication failed to start:", e);
-		}
-	}
+    public static void main(String[] args) {
+        try {
+            SpringApplication.run(InventoryServiceApplication.class, args);
+            log.info("InventoryServiceApplication started ...");
+        } catch (Exception e) {
+            log.error("InventoryServiceApplication failed to start:", e);
+        }
+    }
 }

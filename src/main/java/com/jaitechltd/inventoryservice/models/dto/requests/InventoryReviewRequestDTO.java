@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class InventoryReviewRequestDTO {
-        private String review;
-        private Integer rating;
-        private String reviewer;
+    private String review;
+    private Integer rating;
+    private String reviewer;
 }

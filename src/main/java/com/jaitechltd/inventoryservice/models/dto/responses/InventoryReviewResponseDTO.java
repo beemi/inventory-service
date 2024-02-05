@@ -11,10 +11,10 @@ import lombok.NoArgsConstructor;
 @Data
 public class InventoryReviewResponseDTO {
 
-        private Long id;
-        private String review;
-        private Integer rating;
-        private String reviewer;
-        private String createdAt;
-        private String updatedAt;
+    private Long id;
+    private String review;
+    private Integer rating;
+    private String reviewer;
+    private String createdAt;
+    private String updatedAt;
 }

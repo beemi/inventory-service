@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping(value={"/api/v1/inventory"},produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = {"/api/v1/inventory"}, produces = MediaType.APPLICATION_JSON_VALUE)
 public class InventoryController {
 
     private final InventoryService inventoryService;
@@ -60,7 +60,7 @@ public class InventoryController {
     /**
      * Update inventory by id
      *
-     * @param id Inventory id
+     * @param id               Inventory id
      * @param inventoryRequest Inventory request - see {@link InventoryEntity}
      * @return if successful, return the updated inventory with HTTP status 200, otherwise return HTTP status 500
      */
