@@ -64,15 +64,17 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Generate short SHA 📝📝📝
+        id: short_sha
+        run: |
+          echo "SHORT_SHA=$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_ENV
+
       - name: Build and push Docker image to ECR 🐳 🐳 🐳
         env:
+          CUSTOM_VERSION: ${{ github.run_number }}.${{ github.run_id }}.${{ steps.short_sha.outputs.SHORT_SHA }}
           GIT_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         id: docker_build
         run: |
-          SHORT_SHA=$(echo $GITHUB_SHA | cut -c1-7)
-          CUSTOM_VERSION=${{ github.run_number }}.${{ github.run_id }}.$SHORT_SHA
-          echo "CUSTOM_VERSION=$CUSTOM_VERSION" >> $GITHUB_ENV
-          
           docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
           docker build --tag ${{ env.REGISTRY }}/${{ steps.repo.outputs.name }}:${{ env.CUSTOM_VERSION }} .
           docker push ${{ env.REGISTRY }}/${{ steps.repo.outputs.name }}:${{ env.CUSTOM_VERSION }}
