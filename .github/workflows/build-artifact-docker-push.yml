@@ -11,10 +11,6 @@ on:
   pull_request:
     types: [ 'opened', 'edited', 'reopened', 'synchronize' ]
 
-env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
-
 permissions:
   contents: write
   packages: write
@@ -56,11 +52,11 @@ jobs:
           echo "::endgroup::"
         shell: bash
 
-      - name: Log into registry ${{ env.REGISTRY }}
+      - name: Log into registry ${{ env.REGISTRY }} 🐳🐳🐳
         if: github.event_name != 'pull_request'
-        uses: docker/login-action@v1.12.0
+        uses: docker/login-action@v3.0.0
         with:
-          registry: ${{ env.REGISTRY }}
+          registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
@@ -69,53 +65,72 @@ jobs:
         run: |
           echo "SHORT_SHA=$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_ENV
 
-      - name: Build and push Docker image to ECR 🐳 🐳 🐳
-        env:
-          CUSTOM_VERSION: ${{ github.run_number }}.${{ github.run_id }}.${{ steps.short_sha.outputs.SHORT_SHA }}
-          GIT_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        id: docker_build
-        run: |
-          docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
-          docker build --tag ${{ env.REGISTRY }}/${{ steps.repo.outputs.name }}:${{ env.CUSTOM_VERSION }} .
-          docker push ${{ env.REGISTRY }}/${{ steps.repo.outputs.name }}:${{ env.CUSTOM_VERSION }}
-        shell: bash
-
-      - name: Set Git User Identity 🧑‍🎤🧑‍🎤🧑‍🎤
-        if: github.event_name != 'pull_request'
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-
-      - name: Create Git Tag 📝📝📝 & release those changes to same branch
-        if: github.event_name != 'pull_request'
-        id: create_tag
-        run: |
-          echo "::group::Create Git Tag"
-          tag_name="v${{ env.CUSTOM_VERSION }}"
-          echo "TAG_NAME=$tag_name" >> $GITHUB_ENV
-          git tag -a "$tag_name" -m "Auto generated tag from GitHub Actions 🤖🤖🤖"
-          git push origin "$tag_name"
-          echo "::endgroup::"
-
-      - name: Create a Release in a GitHub Action ✅✅✅
-        if: github.event_name != 'pull_request'
-        id: create_release
-        uses: comnoco/create-release-action@v2.0.5
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Extract Docker metadata 📝📝📝
+        id: meta
+        uses: docker/metadata-action@v5.5.1
         with:
-          tag_name: v${{ env.CUSTOM_VERSION }}
-          release_name: release-${{ env.CUSTOM_VERSION }}
-          draft: false
-          prerelease: false
-          body: |
-            # Release notes 💥💥💥
-            ### Version:
-            - Automated - Tagging version *${{ env.CUSTOM_VERSION }}* *from ${{ github.ref }}* 🎉🎉🎉
-            - Tag - Tag name: ${{ env.TAG_NAME }}
-            - Latest tag - ${{ env.LATEST_TAG }}
-            - Branch - ${{ github.ref }}
-            ### Commits:
-            ${{ env.FORMATTED_COMMIT_LIST }}
+          images: ${{ env.REGISTRY }}/${{ steps.repo.outputs.name }}
+          tags: latest, ${{ github.run_number }}.${{ github.run_id }}.${{ steps.short_sha.outputs.SHORT_SHA }}
+
+      - name: Build and push Docker image to GHCR 🐳 🐳 🐳
+        id: docker_build
+        uses: docker/build-push-action@v5.1.0
+        with:
+          context: .
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          secrets: |
+            username: ${{ github.actor }}
+            GIT_AUTH_TOKEN=${{ secrets.GITHUB_TOKEN }}
+
+#      - name: Build and push Docker image to ECR 🐳 🐳 🐳
+#        env:
+#          CUSTOM_VERSION: ${{ github.run_number }}.${{ github.run_id }}.${{ steps.short_sha.outputs.SHORT_SHA }}
+#          GIT_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        id: docker_build
+#        run: |
+#          docker login ${{ env.REGISTRY }} -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
+#          docker build --tag ${{ env.REGISTRY }}/${{ steps.repo.outputs.name }}:${{ env.CUSTOM_VERSION }} .
+#          docker push ${{ env.REGISTRY }}/${{ steps.repo.outputs.name }}:${{ env.CUSTOM_VERSION }}
+#        shell: bash
+
+#      - name: Set Git User Identity 🧑‍🎤🧑‍🎤🧑‍🎤
+#        if: github.event_name != 'pull_request'
+#        run: |
+#          git config --local user.email "action@github.com"
+#          git config --local user.name "GitHub Action"
+#
+#      - name: Create Git Tag 📝📝📝 & release those changes to same branch
+#        if: github.event_name != 'pull_request'
+#        id: create_tag
+#        run: |
+#          echo "::group::Create Git Tag"
+#          tag_name="v${{ env.CUSTOM_VERSION }}"
+#          echo "TAG_NAME=$tag_name" >> $GITHUB_ENV
+#          git tag -a "$tag_name" -m "Auto generated tag from GitHub Actions 🤖🤖🤖"
+#          git push origin "$tag_name"
+#          echo "::endgroup::"
+#
+#      - name: Create a Release in a GitHub Action ✅✅✅
+#        if: github.event_name != 'pull_request'
+#        id: create_release
+#        uses: comnoco/create-release-action@v2.0.5
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        with:
+#          tag_name: v${{ env.CUSTOM_VERSION }}
+#          release_name: release-${{ env.CUSTOM_VERSION }}
+#          draft: false
+#          prerelease: false
+#          body: |
+#            # Release notes 💥💥💥
+#            ### Version:
+#            - Automated - Tagging version *${{ env.CUSTOM_VERSION }}* *from ${{ github.ref }}* 🎉🎉🎉
+#            - Tag - Tag name: ${{ env.TAG_NAME }}
+#            - Latest tag - ${{ env.LATEST_TAG }}
+#            - Branch - ${{ github.ref }}
+#            ### Commits:
+#            ${{ env.FORMATTED_COMMIT_LIST }}
 
 
