@@ -17,7 +17,6 @@ public class InventoryService {
 
     private final InventoryRepository inventoryRepository;
     private final InventoryEntityConverter inventoryEntityConverter;
-
     private final InventoryReviewEntityConverter inventoryReviewEntityConverter;
 
     public InventoryService(InventoryRepository inventoryRepository, InventoryEntityConverter inventoryEntityConverter, InventoryReviewEntityConverter inventoryReviewEntityConverter) {

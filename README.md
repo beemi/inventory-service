@@ -6,6 +6,9 @@ This is a Inventory Management System that exposes a REST API to manage a invent
 
 - ☕ Java 17
 - 🏗️ Maven
+- 🐬 MySQL
+- 🐘 Spring Boot
+- 🐬Liquibase
 - 🐳 Docker
 - 🧩 Docker-compose
 - 📬 Postman
