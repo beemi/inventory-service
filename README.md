@@ -23,13 +23,13 @@ learning about Spring Boot, REST APIs, and database integration.
 To run the application directly on your machine, use the following Maven command:
 
 ```shell
-mvn spring-boot:run
+./mvnw spring-boot:run
 ```
 
 Create jar file
 
 ```shell
-mvn clean package -DskipTests
+./mvnw clean install -DskipTests
 ```
 
 ### 🐳 Run the Application with Docker-compose
