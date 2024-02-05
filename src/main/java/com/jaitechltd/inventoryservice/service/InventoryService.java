@@ -89,4 +89,11 @@ public class InventoryService {
         log.info("Delete inventory by id service ...");
         inventoryRepository.findById(id).ifPresent(inventoryRepository::delete);
     }
+
+    public Object getAllInventory() {
+        log.info("Get all inventory service ...");
+        return inventoryRepository.findAll().stream()
+                .map(inventoryEntityConverter::toDto)
+                .collect(Collectors.toList());
+    }
 }
