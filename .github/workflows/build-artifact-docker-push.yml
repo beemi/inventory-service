@@ -60,10 +60,10 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Generate short SHA 📝📝📝
+      - name: Generate short git sha 📝📝📝
         id: short_sha
         run: |
-          echo "SHORT_SHA=$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_ENV
+            echo "SHORT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
       - name: Extract Docker metadata 📝📝📝
         id: meta
