@@ -1,11 +1,8 @@
 package com.jaitechltd.inventoryservice.mapper;
 
 import com.jaitechltd.inventoryservice.entities.InventoryEntity;
-import com.jaitechltd.inventoryservice.entities.InventoryReviewEntity;
 import com.jaitechltd.inventoryservice.models.dto.requests.InventoryRequestDTO;
-import com.jaitechltd.inventoryservice.models.dto.requests.InventoryReviewRequestDTO;
 import com.jaitechltd.inventoryservice.models.dto.responses.InventoryResponseDTO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.stream.Collectors;
@@ -13,8 +10,11 @@ import java.util.stream.Collectors;
 @Service
 public class InventoryEntityConverter {
 
-    @Autowired
-    private InventoryReviewEntityConverter inventoryReviewEntityConverter;
+    private final InventoryReviewEntityConverter inventoryReviewEntityConverter;
+
+    public InventoryEntityConverter(InventoryReviewEntityConverter inventoryReviewEntityConverter) {
+        this.inventoryReviewEntityConverter = inventoryReviewEntityConverter;
+    }
 
     public InventoryEntity toEntity(final InventoryRequestDTO inventoryRequest) {
         return InventoryEntity.builder()
