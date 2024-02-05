@@ -94,7 +94,7 @@ jobs:
         id: create_tag
         run: |
           echo "::group::Create Git Tag"
-          tag_name="v${{ steps.meta.outputs.tags }}"
+          tag_name="v${{ steps.meta.outputs.labels.org.opencontainers.image.version }}"
           echo "TAG_NAME=$tag_name" >> $GITHUB_ENV
           git tag -a "$tag_name" -m "Auto generated tag from GitHub Actions 🤖🤖🤖"
           git push origin "$tag_name"
@@ -107,15 +107,15 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v${{ steps.meta.outputs.tags }}
-          release_name: release-${{ steps.meta.outputs.tags }}
+          tag_name: v${{ steps.meta.outputs.labels.org.opencontainers.image.version }}
+          release_name: release-${{ steps.meta.outputs.labels.org.opencontainers.image.version }}
           draft: false
           prerelease: false
           body: |
             # Release notes 💥💥💥
             ### Version:
-            - Automated - Tagging version *${{ steps.meta.outputs.tags }}* *from ${{ github.ref }}* 🎉🎉🎉
-            - Tag - Tag name: *${{ steps.meta.outputs.tags }}*
+            - Automated - Tagging version *${{ steps.meta.outputs.labels.org.opencontainers.image.version }}*
+            - Tag - Tag name: *${{ steps.meta.outputs.labels.org.opencontainers.image.version }}*
             - Branch - ${{ github.ref }}
 
 
