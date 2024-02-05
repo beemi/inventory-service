@@ -27,6 +27,7 @@ public class InventoryService {
 
     /**
      * Create inventory.
+     *
      * @param inventoryRequest Inventory request DTO
      * @return Inventory response DTO
      */
@@ -44,6 +45,7 @@ public class InventoryService {
 
     /**
      * Get inventory by id.
+     *
      * @param id Inventory id
      * @return Inventory response DTO
      */
@@ -83,6 +85,7 @@ public class InventoryService {
 
     /**
      * Delete inventory by id.
+     *
      * @param id Inventory id
      */
     public void deleteInventoryById(Long id) {
