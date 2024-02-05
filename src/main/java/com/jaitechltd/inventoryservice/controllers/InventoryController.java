@@ -57,7 +57,7 @@ public class InventoryController {
      */
     @PutMapping("/{id}")
     public ResponseEntity<?> updateInventory(@PathVariable Long id, @RequestBody InventoryRequestDTO inventoryRequest) {
-        log.info("Call to update inventory by id - {}", id);
+        log.info("Call to update inventory by id {} with request - {}", id, inventoryRequest);
 
         InventoryResponseDTO inventoryResponse = inventoryService.updateInventoryById(id, inventoryRequest);
         return ResponseEntity.ok().body(inventoryResponse);
@@ -73,23 +73,6 @@ public class InventoryController {
     public ResponseEntity<?> deleteInventory(@PathVariable Long id) {
         log.info("Call to delete inventory by id - {}", id);
         inventoryService.deleteInventoryById(id);
-        return ResponseEntity.ok().build();
-    }
-
-    /**
-     * Find all inventories
-     *
-     * @return if successful, return the list of inventories with HTTP status 200, otherwise return HTTP status 500
-     */
-
-    /**
-     * Health check
-     *
-     * @return if successful, return HTTP status 200, otherwise return HTTP status 500
-     */
-    @GetMapping("/health")
-    public ResponseEntity<?> healthCheck() {
-        log.info("Health check ...");
         return ResponseEntity.ok().build();
     }
 }

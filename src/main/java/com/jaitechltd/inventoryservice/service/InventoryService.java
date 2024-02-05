@@ -2,14 +2,14 @@ package com.jaitechltd.inventoryservice.service;
 
 import com.jaitechltd.inventoryservice.entities.InventoryEntity;
 import com.jaitechltd.inventoryservice.mapper.InventoryEntityConverter;
+import com.jaitechltd.inventoryservice.mapper.InventoryReviewEntityConverter;
 import com.jaitechltd.inventoryservice.models.dto.requests.InventoryRequestDTO;
 import com.jaitechltd.inventoryservice.models.dto.responses.InventoryResponseDTO;
 import com.jaitechltd.inventoryservice.repository.InventoryRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -18,11 +18,19 @@ public class InventoryService {
     private final InventoryRepository inventoryRepository;
     private final InventoryEntityConverter inventoryEntityConverter;
 
-    public InventoryService(InventoryRepository inventoryRepository, InventoryEntityConverter inventoryEntityConverter) {
+    private final InventoryReviewEntityConverter inventoryReviewEntityConverter;
+
+    public InventoryService(InventoryRepository inventoryRepository, InventoryEntityConverter inventoryEntityConverter, InventoryReviewEntityConverter inventoryReviewEntityConverter) {
         this.inventoryRepository = inventoryRepository;
         this.inventoryEntityConverter = inventoryEntityConverter;
+        this.inventoryReviewEntityConverter = inventoryReviewEntityConverter;
     }
 
+    /**
+     * Create inventory.
+     * @param inventoryRequest Inventory request DTO
+     * @return Inventory response DTO
+     */
     public InventoryResponseDTO createInventory(InventoryRequestDTO inventoryRequest) {
         log.info("Create inventory service ...");
         // Convert DTO to entity
@@ -35,6 +43,11 @@ public class InventoryService {
         return inventoryEntityConverter.toDto(savedInventory);
     }
 
+    /**
+     * Get inventory by id.
+     * @param id Inventory id
+     * @return Inventory response DTO
+     */
     public InventoryResponseDTO getInventoryById(Long id) {
         log.info("Get inventory by id service ...");
         InventoryEntity inventory = inventoryRepository.findById(id).orElse(null);
@@ -56,6 +69,12 @@ public class InventoryService {
         inventory.setQuantity(inventoryRequest.getQuantity());
         inventory.setPrice(inventoryRequest.getPrice());
 
+        // update reviews
+        inventory.setReviews(inventoryRequest.getReviews().stream()
+                .map(inventoryReviewEntityConverter::toEntity)
+                .collect(Collectors.toList())
+        );
+
         // Save entity to database
         InventoryEntity updatedInventory = inventoryRepository.save(inventory);
 
@@ -63,6 +82,10 @@ public class InventoryService {
         return inventoryEntityConverter.toDto(updatedInventory);
     }
 
+    /**
+     * Delete inventory by id.
+     * @param id Inventory id
+     */
     public void deleteInventoryById(Long id) {
         log.info("Delete inventory by id service ...");
         inventoryRepository.findById(id).ifPresent(inventoryRepository::delete);
