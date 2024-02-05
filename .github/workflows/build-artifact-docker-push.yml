@@ -69,8 +69,8 @@ jobs:
           CUSTOM_VERSION: ${{ github.run_number }}.${{ github.run_id }}
         id: ecr
         run: |
-          docker build --tag ${{ env.ECR_REGISTRY }}/${{ steps.repo.outputs.name }}:${{ env.CUSTOM_VERSION }} .
-          docker push ${{ env.ECR_REGISTRY }}/${{ steps.repo.outputs.name }}:${{ env.CUSTOM_VERSION }}
+          docker build --tag ${{ env.REGISTRY }}/${{ steps.repo.outputs.name }}:${{ env.CUSTOM_VERSION }} .
+          docker push ${{ env.REGISTRY }}/${{ steps.repo.outputs.name }}:${{ env.CUSTOM_VERSION }}
         shell: bash
 
       - name: Set Git User Identity 🧑‍🎤🧑‍🎤🧑‍🎤
