@@ -46,3 +46,12 @@ docker-compose up -d
 🔍 Access the OpenAPI documentation to explore and test the API endpoints:
 
 - Swagger UI: [http://localhost:8090/swagger-ui/index.html](http://localhost:8090/swagger-ui/index.html)
+
+### 📬 CI/CD
+
+- GitHub Actions has been configured to run the tests and build the application on every push to the `main` branch.
+
+### 📦 Packaging
+
+- Docker Image (Dockerfile) has been configured to package the application as a Docker image.
+
