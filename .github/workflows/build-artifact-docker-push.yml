@@ -70,7 +70,7 @@ jobs:
         uses: docker/metadata-action@v5.5.1
         with:
           images: ghcr.io/${{ steps.repo.outputs.name }}
-          tags: 1.${{ github.run_number }}.${{ github.run_id }
+          tags: ${{ github.sha }}, ${{ steps.short_sha.outputs.SHORT_SHA }}
 
       - name: Build and push Docker image to GHCR 🐳 🐳 🐳
         id: docker_build
