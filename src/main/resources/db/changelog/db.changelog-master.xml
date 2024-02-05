@@ -7,7 +7,7 @@ https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
     <include file="db/changelog/scripts/create_inventory_table.sql"/>
     <include file="db/changelog/scripts/create_inventory_review_table.sql"/>
-<!--    <include file="db/changelog/scripts/alter_inventory_review_table.sql"/>-->
+    <include file="db/changelog/scripts/alter_inventory_review_table.sql"/>
 <!--    <include file="db/changelog/scripts/insert_inventory_data.sql"/>-->
 
 </databaseChangeLog>

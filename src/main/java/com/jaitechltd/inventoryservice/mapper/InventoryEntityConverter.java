@@ -1,12 +1,20 @@
 package com.jaitechltd.inventoryservice.mapper;
 
 import com.jaitechltd.inventoryservice.entities.InventoryEntity;
+import com.jaitechltd.inventoryservice.entities.InventoryReviewEntity;
 import com.jaitechltd.inventoryservice.models.dto.requests.InventoryRequestDTO;
+import com.jaitechltd.inventoryservice.models.dto.requests.InventoryReviewRequestDTO;
 import com.jaitechltd.inventoryservice.models.dto.responses.InventoryResponseDTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.stream.Collectors;
 
 @Service
 public class InventoryEntityConverter {
+
+    @Autowired
+    private InventoryReviewEntityConverter inventoryReviewEntityConverter;
 
     public InventoryEntity toEntity(final InventoryRequestDTO inventoryRequest) {
         return InventoryEntity.builder()
@@ -14,6 +22,9 @@ public class InventoryEntityConverter {
                 .description(inventoryRequest.getDescription())
                 .quantity(inventoryRequest.getQuantity())
                 .price(inventoryRequest.getPrice())
+                .reviews(inventoryRequest.getReviews().stream()
+                        .map(inventoryReviewEntityConverter::toEntity)
+                        .collect(Collectors.toList()))
                 .build();
     }
 
@@ -26,6 +37,9 @@ public class InventoryEntityConverter {
                 .price(inventoryEntity.getPrice())
                 .createdAt(inventoryEntity.getCreatedAt().toString())
                 .updatedAt(inventoryEntity.getLastModifiedTime().toString())
+                .reviews(inventoryEntity.getReviews().stream()
+                        .map(inventoryReviewEntityConverter::toDto)
+                        .collect(Collectors.toList()))
                 .build();
     }
 }
