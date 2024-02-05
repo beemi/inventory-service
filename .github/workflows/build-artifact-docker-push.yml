@@ -70,7 +70,7 @@ jobs:
         uses: docker/metadata-action@v5.5.1
         with:
           images: ghcr.io/${{ steps.repo.outputs.name }}
-          tags: latest, ${{ github.run_number }}.${{ github.run_id }}
+          tags: 1.${{ github.run_number }}.${{ github.run_id }
 
       - name: Build and push Docker image to GHCR 🐳 🐳 🐳
         id: docker_build
@@ -81,7 +81,6 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           secrets: |
-            username: ${{ github.actor }}
             GIT_AUTH_TOKEN=${{ secrets.GITHUB_TOKEN }}
 
 #      - name: Build and push Docker image to ECR 🐳 🐳 🐳
