@@ -50,6 +50,9 @@ docker-compose up -d
 ### 📬 CI/CD
 
 - GitHub Actions has been configured to run the tests and build the application on every push to the `main` branch.
+- The Docker image is also built and pushed to the GitHub Container Registry.
+- Docker image tag is based on the Git commit SHA.
+- Git release is created for every tag.
 
 ### 📦 Packaging
 
