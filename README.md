@@ -47,6 +47,8 @@ docker-compose up -d
 
 - Swagger UI: [http://localhost:8090/swagger-ui/index.html](http://localhost:8090/swagger-ui/index.html)
 
+![Swagger UI](./docs/images/swagger-ui.png)
+
 ### 📬 CI/CD
 
 - GitHub Actions has been configured to run the tests and build the application on every push to the `main` branch.
